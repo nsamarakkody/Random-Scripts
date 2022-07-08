@@ -62,7 +62,7 @@ Start-Sleep -Seconds 15
 
 # Execute As System - Find chrome processes running as system and stop the process.
 Invoke-CommandAs -ScriptBlock { 
-    Get-Process | Where-Object { $_.Name -eq "chrome" }  | Stop-Process -Force
+    Get-Process -Name chrome -IncludeUserName | Where UserName -match system | Stop-Process -Force
 } -AsSystem
 
 # wait for the chrome processes to stop.
@@ -70,4 +70,6 @@ Start-Sleep -Seconds 15
 
 # clean up chrome user data dir.
 $chromeUserDataDir = "c:/temp3"
-Remove-Item $chromeUserDataDir -Recurse
+if (Test-Path -Path $chromeUserDataDir) {
+    Remove-Item $chromeUserDataDir -Recurse
+}
